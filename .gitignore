@@ -1,0 +1,13 @@
+.venv/
+.env
+__pycache__/
+.pytest_cache/
+*.pyc
+keystore.json
+mail_outbox/
+*.pem
+.DS_Store
+node_modules/
+frontend/dist/
+cache/
+artifacts/build-info/

@@ -1,0 +1,90 @@
+[
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "MFR-KEEP-780DA25C41",
+    "product_uid": "dab4e9cf-87b1-4618-bf89-4a81d1cc9bc6",
+    "qr_payload": "tt:v1:dab4e9cf-87b1-4618-bf89-4a81d1cc9bc6:c79b56d5d31a4d1edb295edf87f3b2ba",
+    "box_serial": "BOX-KEEP-2CA978CFDB",
+    "seal_id": "SEAL-KEEP-AF34B1D60C"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "MFR-KEEP-782AAD1F37",
+    "product_uid": "6b9e2f2c-de41-49e1-8f7c-63a1fbb8fb5a",
+    "qr_payload": "tt:v1:6b9e2f2c-de41-49e1-8f7c-63a1fbb8fb5a:6d0753ad10dee777d2842bbff0a701ef",
+    "box_serial": "BOX-KEEP-45C6C054FB",
+    "seal_id": "SEAL-KEEP-11F1D6F92E"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "MFR-KEEP-88EF07D8B9",
+    "product_uid": "d7935b23-1f19-44cc-97cc-7cf06f3d8db8",
+    "qr_payload": "tt:v1:d7935b23-1f19-44cc-97cc-7cf06f3d8db8:2e1ad9a68562fb73195b359f0acadfd9",
+    "box_serial": "BOX-KEEP-FCD4F5142F",
+    "seal_id": "SEAL-KEEP-9ED099B0A9"
+  },
+  {
+    "custodian": "DISTRIBUTOR",
+    "serial_number": "MFR-FIX-4146a3c2",
+    "product_uid": "07cbd718-6155-4110-8fda-7c73639e8f8b",
+    "qr_payload": "tt:v1:07cbd718-6155-4110-8fda-7c73639e8f8b:08d6549e4fdb05f49b274ac670255d87",
+    "box_serial": "BOX-FIX-936721ee",
+    "seal_id": "SEAL-FIX-9fff7ac0"
+  },
+  {
+    "custodian": "RETAILER",
+    "serial_number": "001",
+    "product_uid": "8b389a20-e463-49ee-82f4-8d27a3fc9781",
+    "qr_payload": "tt:v1:8b389a20-e463-49ee-82f4-8d27a3fc9781:5ce6ddd96e95f38c445a79313cbe321a",
+    "box_serial": "001",
+    "seal_id": "001"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "002",
+    "product_uid": "69cd62c6-5f22-4f93-8a7e-a66f247e0739",
+    "qr_payload": "tt:v1:69cd62c6-5f22-4f93-8a7e-a66f247e0739:07df83e7d20308947b34601ff9364114",
+    "box_serial": "002",
+    "seal_id": "002"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "123",
+    "product_uid": "acb2618a-d2b3-4314-986c-3361490298da",
+    "qr_payload": "tt:v1:acb2618a-d2b3-4314-986c-3361490298da:84a0040fbf132c2d0d25f4e68b3745cf",
+    "box_serial": "1234",
+    "seal_id": "123"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "900",
+    "product_uid": "65c5e229-f7f4-406f-935b-1e0d8c7d958e",
+    "qr_payload": "tt:v1:65c5e229-f7f4-406f-935b-1e0d8c7d958e:53d770a8cd926bc43c2be56e26c4ac5f",
+    "box_serial": "900",
+    "seal_id": "900"
+  },
+  {
+    "custodian": "DISTRIBUTOR",
+    "serial_number": "109",
+    "product_uid": "0b70183d-617f-4ba6-b8ae-e50876568ce8",
+    "qr_payload": "tt:v1:0b70183d-617f-4ba6-b8ae-e50876568ce8:5857e49f804de0cf5d3ef6337a0a0245",
+    "box_serial": "108",
+    "seal_id": "109"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "102",
+    "product_uid": "32ab0d3e-0ac0-4339-a2fa-d1d3fa27ea0b",
+    "qr_payload": "tt:v1:32ab0d3e-0ac0-4339-a2fa-d1d3fa27ea0b:0fb5e194353c1fad74d6f7f0a20c97c2",
+    "box_serial": "102",
+    "seal_id": "102"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "300",
+    "product_uid": "8f45379f-8932-4662-bc5c-639d38db27b9",
+    "qr_payload": "tt:v1:8f45379f-8932-4662-bc5c-639d38db27b9:70d70523c5744cb9de946681dc7dbc5f",
+    "box_serial": "300",
+    "seal_id": "300"
+  }
+]

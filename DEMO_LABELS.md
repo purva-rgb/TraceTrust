@@ -1,0 +1,94 @@
+# Demo labels
+
+Copy a **product UID** or **QR payload** into Verify.
+
+| Custodian | Serial | Product UID | QR payload |
+| --- | --- | --- | --- |
+| MANUFACTURER | MFR-KEEP-780DA25C41 | `dab4e9cf-87b1-4618-bf89-4a81d1cc9bc6` | `tt:v1:dab4e9cf-87b1-4618-bf89-4a81d1cc9bc6:c79b56d5d31a4d1edb295edf87f3b2ba` |
+| MANUFACTURER | MFR-KEEP-782AAD1F37 | `6b9e2f2c-de41-49e1-8f7c-63a1fbb8fb5a` | `tt:v1:6b9e2f2c-de41-49e1-8f7c-63a1fbb8fb5a:6d0753ad10dee777d2842bbff0a701ef` |
+| MANUFACTURER | MFR-KEEP-88EF07D8B9 | `d7935b23-1f19-44cc-97cc-7cf06f3d8db8` | `tt:v1:d7935b23-1f19-44cc-97cc-7cf06f3d8db8:2e1ad9a68562fb73195b359f0acadfd9` |
+| DISTRIBUTOR | MFR-FIX-4146a3c2 | `07cbd718-6155-4110-8fda-7c73639e8f8b` | `tt:v1:07cbd718-6155-4110-8fda-7c73639e8f8b:08d6549e4fdb05f49b274ac670255d87` |
+| RETAILER | 001 | `8b389a20-e463-49ee-82f4-8d27a3fc9781` | `tt:v1:8b389a20-e463-49ee-82f4-8d27a3fc9781:5ce6ddd96e95f38c445a79313cbe321a` |
+| MANUFACTURER | 002 | `69cd62c6-5f22-4f93-8a7e-a66f247e0739` | `tt:v1:69cd62c6-5f22-4f93-8a7e-a66f247e0739:07df83e7d20308947b34601ff9364114` |
+| MANUFACTURER | 123 | `acb2618a-d2b3-4314-986c-3361490298da` | `tt:v1:acb2618a-d2b3-4314-986c-3361490298da:84a0040fbf132c2d0d25f4e68b3745cf` |
+| MANUFACTURER | 900 | `65c5e229-f7f4-406f-935b-1e0d8c7d958e` | `tt:v1:65c5e229-f7f4-406f-935b-1e0d8c7d958e:53d770a8cd926bc43c2be56e26c4ac5f` |
+| DISTRIBUTOR | 109 | `0b70183d-617f-4ba6-b8ae-e50876568ce8` | `tt:v1:0b70183d-617f-4ba6-b8ae-e50876568ce8:5857e49f804de0cf5d3ef6337a0a0245` |
+| MANUFACTURER | 102 | `32ab0d3e-0ac0-4339-a2fa-d1d3fa27ea0b` | `tt:v1:32ab0d3e-0ac0-4339-a2fa-d1d3fa27ea0b:0fb5e194353c1fad74d6f7f0a20c97c2` |
+| MANUFACTURER | 300 | `8f45379f-8932-4662-bc5c-639d38db27b9` | `tt:v1:8f45379f-8932-4662-bc5c-639d38db27b9:70d70523c5744cb9de946681dc7dbc5f` |
+
+## MFR-KEEP-780DA25C41 (MANUFACTURER)
+
+- UID: `dab4e9cf-87b1-4618-bf89-4a81d1cc9bc6`
+- QR: `tt:v1:dab4e9cf-87b1-4618-bf89-4a81d1cc9bc6:c79b56d5d31a4d1edb295edf87f3b2ba`
+- Box: `BOX-KEEP-2CA978CFDB`
+- Seal: `SEAL-KEEP-AF34B1D60C`
+
+## MFR-KEEP-782AAD1F37 (MANUFACTURER)
+
+- UID: `6b9e2f2c-de41-49e1-8f7c-63a1fbb8fb5a`
+- QR: `tt:v1:6b9e2f2c-de41-49e1-8f7c-63a1fbb8fb5a:6d0753ad10dee777d2842bbff0a701ef`
+- Box: `BOX-KEEP-45C6C054FB`
+- Seal: `SEAL-KEEP-11F1D6F92E`
+
+## MFR-KEEP-88EF07D8B9 (MANUFACTURER)
+
+- UID: `d7935b23-1f19-44cc-97cc-7cf06f3d8db8`
+- QR: `tt:v1:d7935b23-1f19-44cc-97cc-7cf06f3d8db8:2e1ad9a68562fb73195b359f0acadfd9`
+- Box: `BOX-KEEP-FCD4F5142F`
+- Seal: `SEAL-KEEP-9ED099B0A9`
+
+## MFR-FIX-4146a3c2 (DISTRIBUTOR)
+
+- UID: `07cbd718-6155-4110-8fda-7c73639e8f8b`
+- QR: `tt:v1:07cbd718-6155-4110-8fda-7c73639e8f8b:08d6549e4fdb05f49b274ac670255d87`
+- Box: `BOX-FIX-936721ee`
+- Seal: `SEAL-FIX-9fff7ac0`
+
+## 001 (RETAILER)
+
+- UID: `8b389a20-e463-49ee-82f4-8d27a3fc9781`
+- QR: `tt:v1:8b389a20-e463-49ee-82f4-8d27a3fc9781:5ce6ddd96e95f38c445a79313cbe321a`
+- Box: `001`
+- Seal: `001`
+
+## 002 (MANUFACTURER)
+
+- UID: `69cd62c6-5f22-4f93-8a7e-a66f247e0739`
+- QR: `tt:v1:69cd62c6-5f22-4f93-8a7e-a66f247e0739:07df83e7d20308947b34601ff9364114`
+- Box: `002`
+- Seal: `002`
+
+## 123 (MANUFACTURER)
+
+- UID: `acb2618a-d2b3-4314-986c-3361490298da`
+- QR: `tt:v1:acb2618a-d2b3-4314-986c-3361490298da:84a0040fbf132c2d0d25f4e68b3745cf`
+- Box: `1234`
+- Seal: `123`
+
+## 900 (MANUFACTURER)
+
+- UID: `65c5e229-f7f4-406f-935b-1e0d8c7d958e`
+- QR: `tt:v1:65c5e229-f7f4-406f-935b-1e0d8c7d958e:53d770a8cd926bc43c2be56e26c4ac5f`
+- Box: `900`
+- Seal: `900`
+
+## 109 (DISTRIBUTOR)
+
+- UID: `0b70183d-617f-4ba6-b8ae-e50876568ce8`
+- QR: `tt:v1:0b70183d-617f-4ba6-b8ae-e50876568ce8:5857e49f804de0cf5d3ef6337a0a0245`
+- Box: `108`
+- Seal: `109`
+
+## 102 (MANUFACTURER)
+
+- UID: `32ab0d3e-0ac0-4339-a2fa-d1d3fa27ea0b`
+- QR: `tt:v1:32ab0d3e-0ac0-4339-a2fa-d1d3fa27ea0b:0fb5e194353c1fad74d6f7f0a20c97c2`
+- Box: `102`
+- Seal: `102`
+
+## 300 (MANUFACTURER)
+
+- UID: `8f45379f-8932-4662-bc5c-639d38db27b9`
+- QR: `tt:v1:8f45379f-8932-4662-bc5c-639d38db27b9:70d70523c5744cb9de946681dc7dbc5f`
+- Box: `300`
+- Seal: `300`

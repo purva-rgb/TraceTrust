@@ -1,0 +1,311 @@
+{
+  "result": "PASS",
+  "tests_passed": 76,
+  "tests": [
+    {
+      "test": "SQLite integrity",
+      "status": "PASS"
+    },
+    {
+      "test": "Foreign keys",
+      "status": "PASS"
+    },
+    {
+      "test": "Schema version 3",
+      "status": "PASS"
+    },
+    {
+      "test": "Eight original laptops preserved",
+      "status": "PASS"
+    },
+    {
+      "test": "Retail inventory includes products 3 7 8",
+      "status": "PASS"
+    },
+    {
+      "test": "No unverified operational inventory",
+      "status": "PASS"
+    },
+    {
+      "test": "All legacy products unverified",
+      "status": "PASS"
+    },
+    {
+      "test": "Placeholder hashes excluded from live ledger",
+      "status": "PASS"
+    },
+    {
+      "test": "Legacy transfer signatures remain unverified",
+      "status": "PASS"
+    },
+    {
+      "test": "All users disabled pending password setup",
+      "status": "PASS"
+    },
+    {
+      "test": "No placeholder passwords in active user table",
+      "status": "PASS"
+    },
+    {
+      "test": "Dedicated investigator exists",
+      "status": "PASS"
+    },
+    {
+      "test": "Legacy scans cannot claim valid integrity",
+      "status": "PASS"
+    },
+    {
+      "test": "All many-to-many incident links migrated",
+      "status": "PASS"
+    },
+    {
+      "test": "Fusion config is uncalibrated and stored",
+      "status": "PASS"
+    },
+    {
+      "test": "Cause weights normalized",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows organizations",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows users",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows locations",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows warehouses",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows batches",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows products",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows packages",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows seal_inspections",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows authentication_checks",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows transfers",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows transfer_items",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows scan_history",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows custody",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows event_ledger",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows verification_alerts",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows incidents",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows retail_inventory",
+      "status": "PASS"
+    },
+    {
+      "test": "Archive exact rows audit_log",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject nonexistent foreign key",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject source archive edits",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject source archive deletion",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject archive extension",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject audit log edits",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject fabricated legacy promotion",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject provenance relabeling",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject direct owner divergence",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject duplicate active package",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject overwritten seal identifier",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject altered physical evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject altered scan evidence",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject invalid user role organization pairing",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject changed accepted transfer",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject blind account enable",
+      "status": "PASS"
+    },
+    {
+      "test": "Password hashing verifies valid and rejects invalid",
+      "status": "PASS"
+    },
+    {
+      "test": "Password salts differ",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject confirmation without receipt",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject modified durable intent",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject duplicated operation idempotency key",
+      "status": "PASS"
+    },
+    {
+      "test": "Valid structural registration and custody projection",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject live event mutation",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject live event deletion",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject sequence gaps",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject incorrect predecessor",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject manufacturer to retailer skip",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject simultaneous product reservation",
+      "status": "PASS"
+    },
+    {
+      "test": "Reserved product excluded from available inventory",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject wrong seal receipt match",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject partial receipt acceptance",
+      "status": "PASS"
+    },
+    {
+      "test": "Accept structurally complete two item receipt",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject terminal transfer replay",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject noninvestigator adjudication",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject automatic counterfeit flag",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject malformed hypothesis JSON",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject unregistered device scan",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject high-trust public observations",
+      "status": "PASS"
+    },
+    {
+      "test": "Accept structurally valid registered device observation",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject replayed device request and counter",
+      "status": "PASS"
+    },
+    {
+      "test": "Reject reused counter with different request",
+      "status": "PASS"
+    },
+    {
+      "test": "Behavior test foreign keys remain valid",
+      "status": "PASS"
+    },
+    {
+      "test": "Interactive setup helper activates account with verifiable hash",
+      "status": "PASS"
+    }
+  ],
+  "note": "SQL behavior tests use synthetic chain/crypto fixtures only in memory. No cryptographic or live blockchain integration is claimed."
+}
