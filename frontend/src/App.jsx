@@ -1,30 +1,50 @@
-import { useEffect, useMemo, useState } from "react";
-import InventoryScreen from "./screens/InventoryScreen.jsx";
-import LabelsScreen from "./screens/LabelsScreen.jsx";
-import LoginScreen from "./screens/LoginScreen.jsx";
-import ProvenanceScreen from "./screens/ProvenanceScreen.jsx";
-import RegisterScreen from "./screens/RegisterScreen.jsx";
-import SendScreen from "./screens/SendScreen.jsx";
-import TransferDetailScreen from "./screens/TransferDetailScreen.jsx";
-import TransfersScreen from "./screens/TransfersScreen.jsx";
-import VerifyScreen from "./screens/VerifyScreen.jsx";
+import { useEffect, useState } from "react";
+import { api } from "./api.js";
+import Shell from "./components/Shell.jsx";
+import AlertsPage from "./pages/AlertsPage.jsx";
+import HistoryPage from "./pages/HistoryPage.jsx";
+import LoginPage from "./pages/LoginPage.jsx";
+import OverviewPage from "./pages/OverviewPage.jsx";
+import ProductsPage from "./pages/ProductsPage.jsx";
+import SettingsPage from "./pages/SettingsPage.jsx";
+import SupplyPage from "./pages/SupplyPage.jsx";
+import VerifyPage from "./pages/VerifyPage.jsx";
+
+const TITLES = {
+  overview: "Overview",
+  products: "Products",
+  verify: "QR Verification",
+  supply: "Supply Chain",
+  alerts: "Alerts",
+  history: "Event History",
+  settings: "Settings",
+};
+
+const PATHS = {
+  Overview: "/overview",
+  Products: "/products",
+  "QR Verification": "/verify",
+  "Supply Chain": "/supply",
+  Alerts: "/alerts",
+  "Event History": "/history",
+  Settings: "/settings",
+};
 
 function parseHash() {
-  const raw = window.location.hash.replace(/^#/, "") || "/verify";
+  const raw = window.location.hash.replace(/^#/, "") || "/";
   const parts = raw.split("/").filter(Boolean);
-  const head = parts[0] || "verify";
-  return { path: `/${parts.join("/")}`, head, parts };
+  return { head: parts[0] || "", parts };
 }
 
 export default function App() {
   const [token, setToken] = useState(null);
   const [me, setMe] = useState(null);
   const [route, setRoute] = useState(parseHash);
+  const [alertCount, setAlertCount] = useState(0);
 
   useEffect(() => {
     const onHash = () => setRoute(parseHash());
     window.addEventListener("hashchange", onHash);
-    if (!window.location.hash) window.location.hash = "#/verify";
     return () => window.removeEventListener("hashchange", onHash);
   }, []);
 
@@ -35,72 +55,64 @@ export default function App() {
   function login(nextToken, nextMe) {
     setToken(nextToken);
     setMe(nextMe);
-    go("/inventory");
+    go("/overview");
   }
 
   function logout() {
     setToken(null);
     setMe(null);
-    go("/verify");
+    setAlertCount(0);
+    go("/login");
   }
 
-  const links = useMemo(() => {
-    const items = [
-      { href: "/verify", label: "Verify" },
-      { href: "/labels", label: "Labels" },
-      { href: "/products", label: "Provenance" },
-    ];
-    if (!me) {
-      items.push({ href: "/login", label: "Login / Register" });
-      return items;
-    }
-    items.push({ href: "/inventory", label: "Inventory" });
-    items.push({ href: "/transfers", label: "Transfers" });
-    if (me.organization_type === "MANUFACTURER") items.push({ href: "/register", label: "Register" });
-    if (me.organization_type === "MANUFACTURER" || me.organization_type === "DISTRIBUTOR") {
-      items.push({ href: "/send", label: "Send" });
-    }
-    return items;
-  }, [me]);
+  useEffect(() => {
+    if (!token) return undefined;
+    let cancelled = false;
+    api("/incidents", { token })
+      .then((rows) => {
+        if (cancelled) return;
+        const open = (rows || []).filter((row) => row.status === "OPEN" || row.status === "UNDER_REVIEW").length;
+        setAlertCount(open);
+      })
+      .catch(() => {
+        if (!cancelled) setAlertCount(0);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [token, route.head]);
 
-  let page = <VerifyScreen />;
-  if (route.head === "login") page = <LoginScreen onLogin={login} />;
-  else if (route.head === "labels") page = <LabelsScreen token={token} me={me} />;
-  else if (route.head === "register" && token) page = <RegisterScreen token={token} />;
-  else if (route.head === "inventory" && token) page = <InventoryScreen token={token} go={go} />;
-  else if (route.head === "send" && token && me) page = <SendScreen token={token} me={me} go={go} />;
-  else if (route.head === "transfers" && token && me && route.parts[1]) {
-    page = <TransferDetailScreen token={token} me={me} transferUid={route.parts[1]} go={go} />;
-  } else if (route.head === "transfers" && token && me) page = <TransfersScreen token={token} me={me} go={go} />;
-  else if (route.head === "products") {
-    page = <ProvenanceScreen token={token} productUid={route.parts[1]} />;
-  } else if (["register", "inventory", "send", "transfers"].includes(route.head) && !token) {
-    page = <LoginScreen onLogin={login} />;
+  if (!token && route.head !== "verify") {
+    return <LoginPage onLogin={login} onVerify={() => go("/verify")} />;
   }
+
+  if (!token && route.head === "verify") {
+    return (
+      <Shell
+        me={null}
+        active="QR Verification"
+        publicMode
+        onNavigate={(label) => (label === "QR Verification" ? go("/verify") : go("/login"))}
+        onLogout={() => go("/login")}
+      >
+        <VerifyPage />
+      </Shell>
+    );
+  }
+
+  const page = TITLES[route.head] ? route.head : "overview";
+
+  let body = <OverviewPage token={token} me={me} go={go} />;
+  if (page === "products") body = <ProductsPage token={token} me={me} go={go} />;
+  else if (page === "verify") body = <VerifyPage />;
+  else if (page === "supply") body = <SupplyPage token={token} me={me} transferUid={route.parts[1]} go={go} />;
+  else if (page === "alerts") body = <AlertsPage token={token} go={go} />;
+  else if (page === "history") body = <HistoryPage token={token} productUid={route.parts[1]} />;
+  else if (page === "settings") body = <SettingsPage me={me} onLogout={logout} />;
 
   return (
-    <div className="shell">
-      <header className="top">
-        <strong>TraceTrust</strong>
-        <nav>
-          {links.map((link) => (
-            <a key={link.href} href={`#${link.href}`} className={route.path.startsWith(link.href) ? "active" : ""}>
-              {link.label}
-            </a>
-          ))}
-        </nav>
-        {me ? (
-          <div className="who">
-            <span>
-              {me.username} · {me.organization_type}
-            </span>
-            <button type="button" className="secondary" onClick={logout}>
-              Sign out
-            </button>
-          </div>
-        ) : null}
-      </header>
-      <main>{page}</main>
-    </div>
+    <Shell me={me} active={TITLES[page]} alertCount={alertCount} onNavigate={(label) => go(PATHS[label] || "/overview")} onLogout={logout}>
+      {body}
+    </Shell>
   );
 }

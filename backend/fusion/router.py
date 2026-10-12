@@ -1,14 +1,19 @@
 from __future__ import annotations
 
-from typing import Annotated, Any
+from typing import Annotated, Any, Literal
 
 from fastapi import APIRouter, Depends
+from pydantic import BaseModel
 
 from backend.auth.deps import CurrentUser, get_current_user
 from backend.errors import api_error
-from backend.fusion.service import full_assessment, get_incident, list_incidents
+from backend.fusion.service import decide_incident, full_assessment, get_incident, list_incidents
 
 router = APIRouter(tags=["fusion"])
+
+
+class IncidentDecision(BaseModel):
+    decision: Literal["ignore", "freeze"]
 
 
 @router.get("/products/{uid}/assessment")
@@ -36,3 +41,12 @@ def incident_detail(
     if body is None:
         raise api_error(404, "NOT_FOUND", "incident not found")
     return body
+
+
+@router.post("/incidents/{incident_id}/decision")
+def incident_decision(
+    incident_id: int,
+    body: IncidentDecision,
+    _actor: Annotated[CurrentUser, Depends(get_current_user)],
+) -> dict[str, Any]:
+    return decide_incident(incident_id, body.decision)

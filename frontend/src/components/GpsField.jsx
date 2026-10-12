@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { captureGps, gpsSummary, reversePlace, searchPlaces } from "../gps.js";
+import GpsMap from "./GpsMap.jsx";
 
 export default function GpsField({ value, onChange, auto = true }) {
   const [busy, setBusy] = useState(false);
@@ -9,6 +10,18 @@ export default function GpsField({ value, onChange, auto = true }) {
   const [results, setResults] = useState([]);
   const [searching, setSearching] = useState(false);
   const denied = value?.gps_status === "DENIED" || value?.gps_status === "UNAVAILABLE";
+  const mapPoints = useMemo(() => {
+    if (value?.gps_status !== "CAPTURED" || value.latitude == null || value.longitude == null) return [];
+    return [
+      {
+        lat: Number(value.latitude),
+        lng: Number(value.longitude),
+        seq: 0,
+        event_type: "Shared location",
+        gps_source: "CLIENT_REPORTED",
+      },
+    ];
+  }, [value?.gps_status, value?.latitude, value?.longitude]);
 
   useEffect(() => {
     if (!auto || value?.gps_status === "CAPTURED") return undefined;
@@ -95,11 +108,12 @@ export default function GpsField({ value, onChange, auto = true }) {
           {busy ? "Detecting location…" : placeLabel || gpsSummary(value)}
         </span>
         {denied && !busy ? (
-          <button type="button" className="secondary" onClick={retryGps}>
+          <button type="button" className="secondary-button" onClick={retryGps}>
             Use my location
           </button>
         ) : null}
       </div>
+      {mapPoints.length ? <GpsMap points={mapPoints} showTable={false} /> : null}
       {hint ? <p className="muted">{hint}</p> : null}
       {denied && !busy ? (
         <div className="place-search">

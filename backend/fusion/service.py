@@ -617,12 +617,34 @@ def list_incidents(*, db_path=None) -> list[dict]:
     try:
         rows = conn.execute(
             """
-            SELECT id, product_uid, window_start_ms, window_end_ms, status, revision, created_at
-            FROM fusion_incidents
-            ORDER BY id DESC
+            SELECT i.id, i.product_uid, i.window_start_ms, i.window_end_ms, i.status, i.revision, i.created_at,
+                   (
+                     SELECT pkg.package_serial_number
+                     FROM products p
+                     JOIN packages pkg ON pkg.product_id = p.product_id AND pkg.status = 'ACTIVE'
+                     WHERE p.product_uid = i.product_uid
+                     LIMIT 1
+                   ) AS box_serial
+            FROM fusion_incidents i
+            ORDER BY i.id DESC
             """
         ).fetchall()
-        return [dict(row) for row in rows]
+        listed = []
+        for row in rows:
+            item = dict(row)
+            alerts = conn.execute(
+                """
+                SELECT a.id, a.rule_code, a.reason, a.evidence_class
+                FROM fusion_incident_alerts link
+                JOIN rule_alerts a ON a.id = link.alert_id
+                WHERE link.incident_id=?
+                ORDER BY a.event_time_ms, a.id
+                """,
+                (row["id"],),
+            ).fetchall()
+            item["alerts"] = [dict(alert) for alert in alerts]
+            listed.append(item)
+        return listed
     finally:
         conn.close()
 
@@ -666,6 +688,27 @@ def get_incident(incident_id: int, *, db_path=None) -> dict | None:
         ],
         "alerts": [_row_alert(item) for item in alerts],
     }
+
+
+def decide_incident(incident_id: int, decision: str, *, db_path=None) -> dict:
+    status = {"ignore": "DISMISSED", "freeze": "UNDER_REVIEW"}.get(decision)
+    if status is None:
+        raise api_error(422, "INVALID_DECISION", "Choose ignore or freeze.")
+    conn = connect(db_path)
+    try:
+        row = conn.execute("SELECT id, status FROM fusion_incidents WHERE id=?", (incident_id,)).fetchone()
+        if row is None:
+            raise api_error(404, "NOT_FOUND", "incident not found")
+        if row["status"] not in {"OPEN", "UNDER_REVIEW", "DISMISSED"}:
+            raise api_error(409, "DECISION_CLOSED", "This alert is already closed.")
+        conn.execute("UPDATE fusion_incidents SET status=? WHERE id=?", (status, incident_id))
+        conn.commit()
+    finally:
+        conn.close()
+    body = get_incident(incident_id, db_path=db_path)
+    if body is None:
+        raise api_error(404, "NOT_FOUND", "incident not found")
+    return body
 
 
 def case_result(**kwargs) -> dict:

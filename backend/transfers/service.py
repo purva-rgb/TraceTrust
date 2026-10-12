@@ -37,6 +37,34 @@ from backend.transfers.schemas import (
 )
 
 LEGAL_EDGES = {("MANUFACTURER", "DISTRIBUTOR"), ("DISTRIBUTOR", "RETAILER")}
+
+
+def _open_alert_uids(conn: sqlite3.Connection, product_uids: list[str]) -> list[str]:
+    if not product_uids:
+        return []
+    placeholders = ",".join("?" for _ in product_uids)
+    try:
+        rows = conn.execute(
+            f"""
+            SELECT DISTINCT product_uid FROM fusion_incidents
+            WHERE status = 'UNDER_REVIEW' AND product_uid IN ({placeholders})
+            """,
+            tuple(product_uids),
+        ).fetchall()
+    except sqlite3.OperationalError:
+        return []
+    return [row["product_uid"] for row in rows]
+
+
+def _reject_if_frozen(conn: sqlite3.Connection, product_uids: list[str]) -> None:
+    frozen = _open_alert_uids(conn, product_uids)
+    if frozen:
+        raise api_error(
+            409,
+            "STEPS_FROZEN",
+            "Upcoming steps for this box are frozen.",
+            product_uids=frozen,
+        )
 COUNTERPARTIES = {
     "MANUFACTURER": frozenset({"DISTRIBUTOR"}),
     "DISTRIBUTOR": frozenset({"MANUFACTURER", "RETAILER"}),
@@ -347,6 +375,15 @@ def initiate_transfer(
         if any(row["warehouse_id"] != source_id for row in by_uid.values()):
             conn.rollback()
             raise api_error(422, "WAREHOUSE_MISMATCH", "all products must share the source warehouse")
+        frozen = _open_alert_uids(conn, unique_uids)
+        if frozen:
+            conn.rollback()
+            raise api_error(
+                409,
+                "STEPS_FROZEN",
+                "Upcoming steps for this box are frozen.",
+                product_uids=frozen,
+            )
 
         sender = _org_row(conn, actor.organization_id)
         if sender["current_key_id"] is None or sender["eth_address"] is None:
@@ -646,6 +683,15 @@ def record_receipts(actor: CurrentUser, transfer_uid: str, body: ReceiptsIn) -> 
             (row["transfer_id"],),
         ).fetchall()
         expected_uids = [item["product_uid"] for item in manifest_rows]
+        frozen = _open_alert_uids(conn, expected_uids)
+        if frozen:
+            conn.rollback()
+            raise api_error(
+                409,
+                "STEPS_FROZEN",
+                "Upcoming steps for this box are frozen.",
+                product_uids=frozen,
+            )
         by_uid = {item["product_uid"]: item for item in manifest_rows}
         observed_uids = [item.product_uid for item in body.items]
         counts = Counter(observed_uids)
@@ -896,6 +942,8 @@ def accept_transfer(actor: CurrentUser, transfer_uid: str, body: AcceptIn, chain
     gps = gps_to_canonical(body.gps)
     with get_connection() as conn:
         row = _transfer_query(conn, transfer_uid)
+        if row is not None:
+            _reject_if_frozen(conn, [item.product_uid for item in _items_out(conn, row["transfer_id"])])
         if row is None:
             raise api_error(404, "NOT_FOUND", "transfer not found")
         inspections = conn.execute(

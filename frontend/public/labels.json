@@ -86,5 +86,29 @@
     "qr_payload": "tt:v1:8f45379f-8932-4662-bc5c-639d38db27b9:70d70523c5744cb9de946681dc7dbc5f",
     "box_serial": "300",
     "seal_id": "300"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "1001",
+    "product_uid": "a7455025-234f-4d92-8012-897cae5e2b6b",
+    "qr_payload": "tt:v1:a7455025-234f-4d92-8012-897cae5e2b6b:3781c63d0dec24972620102dc395a246",
+    "box_serial": "1001",
+    "seal_id": "1001"
+  },
+  {
+    "custodian": "MANUFACTURER",
+    "serial_number": "120",
+    "product_uid": "67a9280a-5a6f-4469-99db-f4f1e0988551",
+    "qr_payload": "tt:v1:67a9280a-5a6f-4469-99db-f4f1e0988551:e8620845c049197731be3c8f7ed20ec5",
+    "box_serial": "210",
+    "seal_id": "120"
+  },
+  {
+    "custodian": "DISTRIBUTOR",
+    "serial_number": "107",
+    "product_uid": "ef139ac9-6103-481a-9016-28477c491493",
+    "qr_payload": "tt:v1:ef139ac9-6103-481a-9016-28477c491493:34d722f6484b7440b3646263202075c5",
+    "box_serial": "107",
+    "seal_id": "107"
   }
 ]

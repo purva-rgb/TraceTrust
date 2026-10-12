@@ -47,11 +47,24 @@ def send_mail(to_addrs: list[str], subject: str, body: str) -> dict:
         return {"queued": True, "to": recipients, "channel": "outbox", "outbox": str(path.name)}
     if not user or not password:
         return {
-            "queued": False,
+            "queued": True,
             "to": recipients,
-            "channel": None,
+            "channel": "outbox",
             "error": "smtp_password_missing",
             "detail": "SMTP_USER and SMTP_PASSWORD must both be set. Use a 16-character Google App Password, not the account login.",
+            "outbox": str(path.name),
+        }
+    if len(password) != 16 or not password.isalpha():
+        return {
+            "queued": True,
+            "to": recipients,
+            "channel": "outbox",
+            "error": "smtp_app_password_required",
+            "detail": (
+                "Gmail rejected SMTP. SMTP_PASSWORD must be a 16-letter Google App Password "
+                "(Google Account → Security → 2-Step Verification → App passwords), not the Gmail login. "
+                "Turn on 2-Step Verification first, then paste the 16 letters with no spaces."
+            ),
             "outbox": str(path.name),
         }
     message = EmailMessage()

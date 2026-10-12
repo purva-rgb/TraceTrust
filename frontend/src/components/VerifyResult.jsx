@@ -2,27 +2,63 @@ import { eventPoints } from "../gps.js";
 import AssessmentCard from "./AssessmentCard.jsx";
 import GpsMap from "./GpsMap.jsx";
 
-function formatFlag(value) {
-  if (value === true) return "yes";
-  if (value === false) return "no";
+const FLAG_COPY = [
+  ["location_mismatch", "Scan is far from the warehouse"],
+  ["hold_active", "Product is on hold"],
+  ["recall_active", "Product was recalled"],
+  ["stolen_active", "Reported stolen"],
+  ["identity_revoked", "This product ID was retired"],
+  ["authenticity_verdict", "Investigator decision"],
+];
+
+const PHYSICAL_COPY = {
+  box_id: "Box ID",
+  seal_id: "Seal ID",
+  seal_condition: "Seal condition",
+  laptop_serial: "Laptop serial inside the box",
+};
+
+const INTEGRITY_COPY = {
+  VERIFIED: "The signed history matches",
+  FAILED: "The signed history does not match",
+  UNVERIFIABLE: "The chain could not be checked",
+  PENDING: "Digital checks are still pending",
+};
+
+const STATUS_COPY = {
+  VALID: "Checks look consistent",
+  SUSPICIOUS: "Needs review",
+  INVALID: "Digital record failed",
+  UNKNOWN: "Unknown product",
+  PENDING: "Still pending",
+};
+
+function formatFlag(key, value) {
+  if (key === "authenticity_verdict") {
+    if (!value || value === "UNDETERMINED") return "Not decided";
+    return String(value).replaceAll("_", " ");
+  }
+  if (value === true) return "Yes";
+  if (value === false) return "No";
   return String(value);
 }
 
 function physicalLine(physical, key) {
   const status = physical[key] || "NOT_CHECKED";
-  if (key === "box_id" && physical.box_serial) return `${physical.box_serial} · ${status}`;
-  if (key === "seal_id" && physical.seal_serial) return `${physical.seal_serial} · ${status}`;
-  return status;
+  const readable = status === "NOT_CHECKED" ? "Not checked" : status === "INTACT" ? "Intact" : status;
+  if (key === "box_id" && physical.box_serial) return `${physical.box_serial} · ${readable}`;
+  if (key === "seal_id" && physical.seal_serial) return `${physical.seal_serial} · ${readable}`;
+  return readable;
 }
 
 function FlagList({ flags }) {
-  if (!flags) return <p className="muted">restriction_flags unavailable</p>;
+  if (!flags) return <p className="muted">Restriction details are unavailable.</p>;
   return (
     <ul className="flags">
-      {Object.entries(flags).map(([key, value]) => (
+      {FLAG_COPY.map(([key, label]) => (
         <li key={key}>
-          <span>{key}</span>
-          <strong>{formatFlag(value)}</strong>
+          <span>{label}</span>
+          <strong className={flags[key] === true ? "error" : ""}>{formatFlag(key, flags[key])}</strong>
         </li>
       ))}
     </ul>
@@ -42,18 +78,14 @@ export default function VerifyResult({ result, full = false }) {
     <section className="stack">
       <div className={`banner status-${(result.final_status || "UNKNOWN").toLowerCase()}`}>
         <h2>{headline}</h2>
-        <p>
-          {result.final_status}
-          {result.product_uid ? ` · ${result.product_uid}` : ""}
-        </p>
       </div>
 
       <div className="grid-2">
         <article className="card">
-          <h3>record_integrity</h3>
+          <h3>Digital record</h3>
           <p>
-            {integrity.status || "UNVERIFIABLE"}
-            {integrity.failing_layer ? ` · layer ${integrity.failing_layer}` : ""}
+            {INTEGRITY_COPY[integrity.status] || integrity.status || "Could not be checked"}
+            {integrity.failing_layer ? ` (${integrity.failing_layer} check)` : ""}
           </p>
           {(integrity.reasons || []).map((reason) => (
             <p key={reason} className="muted">
@@ -62,14 +94,14 @@ export default function VerifyResult({ result, full = false }) {
           ))}
         </article>
         <article className="card">
-          <h3>physical_checks</h3>
+          <h3>Physical checks</h3>
           <ul className="flags">
             {["box_id", "seal_id", "seal_condition", "laptop_serial"].map((key) => {
               const shown = physicalLine(physical, key);
               const unchecked = (physical[key] || "NOT_CHECKED") === "NOT_CHECKED";
               return (
                 <li key={key}>
-                  <span>{key}</span>
+                  <span>{PHYSICAL_COPY[key]}</span>
                   <strong className={unchecked ? "not-checked" : ""}>{shown}</strong>
                 </li>
               );
@@ -79,10 +111,10 @@ export default function VerifyResult({ result, full = false }) {
       </div>
 
       <article className="card">
-        <h3>restriction_flags</h3>
+        <h3>What was flagged</h3>
         <FlagList flags={result.restriction_flags} />
         {result.restriction_flags?.location_mismatch ? (
-          <p className="error">Verifier GPS is more than 50 km from the current warehouse — flagged suspicious.</p>
+          <p className="error">This scan is more than 50 km from the warehouse on file, so the result needs review.</p>
         ) : null}
       </article>
 
@@ -113,7 +145,16 @@ export default function VerifyResult({ result, full = false }) {
         </article>
       ) : null}
 
-      <AssessmentCard assessment={result.assessment} />
+      <AssessmentCard
+        assessment={result.assessment}
+        flagged={Boolean(
+          result.restriction_flags?.location_mismatch ||
+            result.restriction_flags?.hold_active ||
+            result.restriction_flags?.recall_active ||
+            result.restriction_flags?.stolen_active ||
+            result.restriction_flags?.identity_revoked,
+        )}
+      />
 
       <article className="card">
         <h3>GPS</h3>
@@ -133,7 +174,6 @@ export default function VerifyResult({ result, full = false }) {
       {(result.events || []).length ? (
         <article className="card">
           <h3>Provenance</h3>
-          <p className="muted">Each handover is a new event with its own hash. Verified means each previous_hash equals the prior event_hash.</p>
           <table className="plain">
             <thead>
               <tr>

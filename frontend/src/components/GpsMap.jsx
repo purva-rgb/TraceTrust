@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-export default function GpsMap({ points }) {
+export default function GpsMap({ points, showTable = true }) {
   const mapRef = useRef(null);
   const layerRef = useRef(null);
   const [tilesFailed, setTilesFailed] = useState(false);
@@ -44,7 +44,7 @@ export default function GpsMap({ points }) {
     <div>
       {!tilesFailed ? <div ref={mapRef} className="map" /> : null}
       {tilesFailed ? <p className="muted">Map unavailable.</p> : null}
-      <table className="plain">
+      {showTable ? <table className="plain">
         <thead>
           <tr>
             <th>Seq</th>
@@ -65,7 +65,7 @@ export default function GpsMap({ points }) {
             </tr>
           ))}
         </tbody>
-      </table>
+      </table> : null}
     </div>
   );
 }
