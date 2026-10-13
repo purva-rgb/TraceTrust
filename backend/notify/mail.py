@@ -19,9 +19,11 @@ def _outbox_dir() -> Path:
     return Path(tempfile.gettempdir()) / "tracetrust-mail_outbox"
 
 
+OUTBOX = _outbox_dir()
+
+
 def _write_outbox(to_addrs: list[str], subject: str, body: str) -> Path:
-    outbox = _outbox_dir()
-    outbox.mkdir(exist_ok=True)
+    OUTBOX.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f")
     path = outbox / f"{stamp}.txt"
     path.write_text(

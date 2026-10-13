@@ -1,0 +1,30 @@
+{
+  "schema_version": 3,
+  "source_sha256": "cd385f8acf8ae763a72fdcda9294969ca40016bc72a600f30b4ef59455fb7e58",
+  "source_counts": {
+    "organizations": 4,
+    "users": 5,
+    "locations": 3,
+    "warehouses": 3,
+    "batches": 4,
+    "products": 8,
+    "packages": 8,
+    "seal_inspections": 8,
+    "authentication_checks": 3,
+    "transfers": 2,
+    "transfer_items": 3,
+    "scan_history": 9,
+    "custody": 8,
+    "event_ledger": 4,
+    "verification_alerts": 5,
+    "incidents": 2,
+    "retail_inventory": 1,
+    "audit_log": 3
+  },
+  "output": "laptop_anti_counterfeit.db",
+  "legacy_events_archived": 4,
+  "live_events": 0,
+  "output_sha256": "075263c84373e0612fe4dc9aca63211dbe968567d402a321260d8e93185f17a7",
+  "tables": 61,
+  "views": 4
+}
