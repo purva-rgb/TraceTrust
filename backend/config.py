@@ -1,3 +1,6 @@
+import os
+import shutil
+import tempfile
 from functools import lru_cache
 from pathlib import Path
 
@@ -46,11 +49,24 @@ class Settings(BaseSettings):
         return [item.strip() for item in self.cors_origins.split(",") if item.strip()]
 
 
+def _writable_copy(path: Path) -> Path:
+    """Vercel can read the bundled database but cannot write next to the code."""
+    parent_writable = os.access(path.parent, os.W_OK)
+    file_writable = not path.exists() or os.access(path, os.W_OK)
+    if parent_writable and file_writable:
+        return path
+    runtime = Path(tempfile.gettempdir()) / path.name
+    if path.exists():
+        shutil.copy2(path, runtime)
+    return runtime
+
+
 @lru_cache
 def get_settings() -> Settings:
     settings = Settings()
     if not settings.database_path.is_absolute():
         settings.database_path = (ROOT / settings.database_path).resolve()
+    settings.database_path = _writable_copy(settings.database_path)
     if settings.keystore_path is None:
         candidate = ROOT / "keystore.json"
         if candidate.exists():

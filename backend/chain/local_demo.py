@@ -3,7 +3,10 @@ from __future__ import annotations
 
 import json
 import logging
+import os
+import tempfile
 from datetime import datetime, timezone
+from pathlib import Path
 from uuid import uuid4
 
 from eth_account import Account
@@ -13,7 +16,15 @@ from backend.crypto.keys import address_from_private_key
 from backend.db import connect
 
 logger = logging.getLogger("tracetrust")
-KEYSTORE_PATH = ROOT / "keystore.json"
+
+
+def _keystore_path() -> Path:
+    if os.access(ROOT, os.W_OK):
+        return ROOT / "keystore.json"
+    return Path(tempfile.gettempdir()) / "tracetrust-keystore.json"
+
+
+KEYSTORE_PATH = _keystore_path()
 LOCAL_CONTRACT = "0x" + "11" * 20
 ORG_IDS = ((1, "MANUFACTURER"), (2, "DISTRIBUTOR"), (3, "RETAILER"))
 # Filled only when locations.latitude/longitude are NULL. Used by location_check (50 km).

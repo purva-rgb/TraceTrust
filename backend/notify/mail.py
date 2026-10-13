@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import logging
+import os
 import smtplib
+import tempfile
 from datetime import datetime, timezone
 from email.message import EmailMessage
 from pathlib import Path
@@ -9,13 +11,19 @@ from pathlib import Path
 from backend.config import ROOT, get_settings
 
 logger = logging.getLogger("tracetrust")
-OUTBOX = ROOT / "mail_outbox"
+
+
+def _outbox_dir() -> Path:
+    if os.access(ROOT, os.W_OK):
+        return ROOT / "mail_outbox"
+    return Path(tempfile.gettempdir()) / "tracetrust-mail_outbox"
 
 
 def _write_outbox(to_addrs: list[str], subject: str, body: str) -> Path:
-    OUTBOX.mkdir(exist_ok=True)
+    outbox = _outbox_dir()
+    outbox.mkdir(exist_ok=True)
     stamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%f")
-    path = OUTBOX / f"{stamp}.txt"
+    path = outbox / f"{stamp}.txt"
     path.write_text(
         f"To: {', '.join(to_addrs)}\nSubject: {subject}\n\n{body}\n",
         encoding="utf-8",
