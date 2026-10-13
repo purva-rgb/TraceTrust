@@ -44,7 +44,7 @@ export default function GpsMap({ points, showTable = true }) {
     <div>
       {!tilesFailed ? <div ref={mapRef} className="map" /> : null}
       {tilesFailed ? <p className="muted">Map unavailable.</p> : null}
-      {showTable ? <table className="plain">
+      {showTable ? <table className="plain gps-table">
         <thead>
           <tr>
             <th>Seq</th>

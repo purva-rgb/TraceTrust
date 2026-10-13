@@ -126,6 +126,16 @@ button:disabled { cursor: not-allowed; opacity: .6; }
 .journey-step.frozen { opacity: 0.55; }
 .journey-step.frozen .journey-icon { filter: grayscale(1); background: #f3f1ea; color: #9aa29c; }
 .frozen-tag { display: block; margin-top: 4px; color: #a9574c; font-size: 10px; font-style: normal; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+.verification-grid { grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); }
+.verification-grid > *, .stack, .card { min-width: 0; max-width: 100%; }
+.map { width: 100%; max-width: 100%; }
+table.plain, table.gps-table { min-width: 0; width: 100%; }
+table.gps-table { table-layout: auto; }
+table.gps-table th, table.gps-table td { padding: 8px 6px; }
+table.gps-table th:first-child, table.gps-table td:first-child { padding-left: 8px; }
+table.gps-table th:nth-child(3), table.gps-table td:nth-child(3),
+table.gps-table th:nth-child(4), table.gps-table td:nth-child(4) { white-space: nowrap; }
+.card:has(table.gps-table) { overflow-x: auto; }
 .alert-row { cursor: pointer; }
 .alert-row.selected td { background: #eef3ea; }
 .decision-panel { margin-top: 14px; }
