@@ -8,6 +8,7 @@ from backend.fusion.config import (
     BURST_MIN_DEVICES,
     BURST_WINDOW_MS,
     MIN_DISTANCE_KM,
+    RECEIPT_CONFLICT_WINDOW_MS,
     RULE_VERSION,
     SPEED_KMH,
     TRUST,
@@ -145,7 +146,7 @@ def _burst(scans: list[dict]) -> list[dict]:
                 product_uid=origin["product_uid"],
                 evidence_ids=[item["evidence_id"] for item in members],
                 trust=trust,
-                reason=f"{len(members)} distinct registered devices scanned this product within 10 minutes",
+                reason=f"{len(members)} distinct registered devices scanned this product within 5 seconds",
                 is_simulated=_simulated(members),
                 event_time_ms=max(int(item["event_time_ms"]) for item in members),
             )
@@ -162,7 +163,7 @@ def _concurrent(transfers: list[dict]) -> list[dict]:
     rows.sort(key=lambda item: (int(item["event_time_ms"]), str(item["evidence_id"])))
     for index, left in enumerate(rows):
         for right in rows[index + 1 :]:
-            if abs(int(left["event_time_ms"]) - int(right["event_time_ms"])) > BURST_WINDOW_MS:
+            if abs(int(left["event_time_ms"]) - int(right["event_time_ms"])) > RECEIPT_CONFLICT_WINDOW_MS:
                 continue
             if left.get("org_id") is None or left.get("org_id") == right.get("org_id"):
                 continue

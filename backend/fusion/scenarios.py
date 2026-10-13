@@ -66,7 +66,7 @@ def registered_clone(count: int = 3, *, product_uid: str = "prod-eval", client_t
                 product_uid=product_uid,
                 lat=lat,
                 lng=lng,
-                event_time_ms=index * 3 * 60 * 1000,
+                event_time_ms=index * 1000,
                 device_id=device_id,
                 device_registered=True,
                 signature_valid=True,

@@ -104,7 +104,7 @@ export default function App() {
 
   let body = <OverviewPage token={token} me={me} go={go} />;
   if (page === "products") body = <ProductsPage token={token} me={me} go={go} />;
-  else if (page === "verify") body = <VerifyPage />;
+  else if (page === "verify") body = <VerifyPage token={token} />;
   else if (page === "supply") body = <SupplyPage token={token} me={me} transferUid={route.parts[1]} go={go} />;
   else if (page === "alerts") body = <AlertsPage token={token} go={go} />;
   else if (page === "history") body = <HistoryPage token={token} productUid={route.parts[1]} />;

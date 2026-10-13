@@ -230,7 +230,7 @@ def summary_for(product_uid: str, *, missing_checks: list[str] | None = None, db
     return fuse(alerts, missing_checks=missing_checks)
 
 
-def _insert_public_scan(conn, product_uid: str, gps: dict | None, integrity: dict | None) -> None:
+def _insert_public_scan(conn, product_uid: str, gps: dict | None, integrity: dict | None, actor=None) -> None:
     product = conn.execute(
         "SELECT product_id, is_simulated, qr_token FROM products WHERE product_uid=?",
         (product_uid,),
@@ -259,14 +259,15 @@ def _insert_public_scan(conn, product_uid: str, gps: dict | None, integrity: dic
             identity_trust, location_trust, inspection_trust, is_simulated, rule_version,
             record_integrity, physical_checks_json, restriction_flags_json, data_origin,
             product_id, scanned_qr_token, scan_latitude, scan_longitude,
+            scanner_user_id, scanner_organization_id,
             verification_method, verification_status, scanned_at, canonical_payload
-        ) VALUES (?,?,?,?,0,0,0,?,?,?, '{}', '[]', 'LIVE', ?,?,?,?, 'QR','PENDING',?,?)
+        ) VALUES (?,?,?,?,0,0,0,?,?,?, '{}', '[]', 'LIVE', ?,?,?,?,?,?, 'QR','PENDING',?,?)
         """,
         (
             str(uuid4()),
             stamp,
             stamp,
-            "PUBLIC",
+            "STAFF" if actor is not None else "PUBLIC",
             int(product["is_simulated"] or 0),
             "rules-v1",
             record_integrity,
@@ -274,6 +275,8 @@ def _insert_public_scan(conn, product_uid: str, gps: dict | None, integrity: dic
             product_uid,
             lat,
             lng,
+            actor.user_id if actor is not None else None,
+            actor.organization_id if actor is not None else None,
             stamp,
             payload,
         ),
@@ -327,6 +330,11 @@ def load_context(conn, product_uid: str) -> dict:
         signature_valid = payload.get("signature_valid")
         if row["source"] == "DEVICE":
             signature_valid = bool(row["digital_signature"]) if signature_valid is None else bool(signature_valid)
+        device_id = row["device_id"]
+        device_registered = row["device_status"] == "ACTIVE"
+        if device_id is None and row["scanner_user_id"] is not None:
+            device_id = f"user:{row['scanner_user_id']}"
+            device_registered = True
         scans.append(
             {
                 "evidence_id": row["observation_uid"],
@@ -334,8 +342,8 @@ def load_context(conn, product_uid: str) -> dict:
                 "lat": row["scan_latitude"],
                 "lng": row["scan_longitude"],
                 "event_time_ms": _to_ms(row["received_at"] or row["scanned_at"]),
-                "device_id": row["device_id"],
-                "device_registered": row["device_status"] == "ACTIVE",
+                "device_id": device_id,
+                "device_registered": device_registered,
                 "signature_valid": signature_valid,
                 "authenticated": row["scanner_user_id"] is not None or row["source"] == "STAFF",
                 "inspection_method": "STAFF" if row["source"] == "STAFF" else None,
@@ -512,11 +520,11 @@ def digital_from_integrity(product_uid: str, integrity: dict | None) -> list[dic
     ]
 
 
-def record_verification(product_uid: str, result: dict, observer_gps: dict | None, *, db_path=None) -> dict:
+def record_verification(product_uid: str, result: dict, observer_gps: dict | None, *, db_path=None, actor=None) -> dict:
     conn = connect(db_path)
     try:
         conn.execute("BEGIN IMMEDIATE")
-        _insert_public_scan(conn, product_uid, observer_gps, result.get("record_integrity"))
+        _insert_public_scan(conn, product_uid, observer_gps, result.get("record_integrity"), actor)
         context = load_context(conn, product_uid)
         context["digital"] = digital_from_integrity(product_uid, result.get("record_integrity"))
         evaluation = evaluate(**context)

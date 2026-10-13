@@ -6,7 +6,7 @@ import VerifyResult from "../components/VerifyResult.jsx";
 import QrScanner from "../components/QrScanner.jsx";
 import { FileSearch, Search } from "../components/Icons.jsx";
 
-export default function VerifyPage() {
+export default function VerifyPage({ token = null }) {
   const [query, setQuery] = useState("");
   const [gps, setGps] = useState(GPS_NOT_REQUESTED);
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ export default function VerifyPage() {
         ? { product_uid: text, gps }
         : { token: text, gps };
     try {
-      setResult(await api("/public/verify", { method: "POST", body }));
+      setResult(await api("/public/verify", { method: "POST", body, token }));
     } catch (err) {
       setResult(null);
       setError(err.message);

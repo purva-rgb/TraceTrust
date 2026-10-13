@@ -33,7 +33,7 @@ def resolve_product_uid(body: VerifyIn, *, db_path=None) -> str | None:
     return product_uid
 
 
-def verify_request(body: VerifyIn, chain: ChainClient | None, *, db_path=None) -> dict:
+def verify_request(body: VerifyIn, chain: ChainClient | None, *, db_path=None, actor=None) -> dict:
     product_uid = resolve_product_uid(body, db_path=db_path)
     if not product_uid:
         return unknown_result()
@@ -46,7 +46,7 @@ def verify_request(body: VerifyIn, chain: ChainClient | None, *, db_path=None) -
     try:
         from backend.fusion.service import record_verification
 
-        result["assessment"] = record_verification(product_uid, result, observer_gps, db_path=db_path)
+        result["assessment"] = record_verification(product_uid, result, observer_gps, db_path=db_path, actor=actor)
     except Exception:
         import logging
 

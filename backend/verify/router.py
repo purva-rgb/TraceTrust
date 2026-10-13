@@ -30,10 +30,11 @@ def public_verify(
     body: VerifyIn,
     request: Request,
     chain: Annotated[ChainClient | None, Depends(get_chain_optional)],
+    actor: Annotated[CurrentUser | None, Depends(get_optional_user)] = None,
 ) -> dict[str, Any]:
     if not public_verify_limiter.allow(_client_ip(request)):
         raise api_error(status.HTTP_429_TOO_MANY_REQUESTS, "RATE_LIMITED", "too many verification requests")
-    result = verify_request(body, chain)
+    result = verify_request(body, chain, actor=actor)
     reduced = reduce_public(result)
     if "genuine" in reduced.get("headline", "").lower():
         reduced["headline"] = "Digital record verified"
