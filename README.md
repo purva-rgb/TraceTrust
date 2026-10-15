@@ -49,6 +49,7 @@ Every blockchain write follows a crash-safe flow: save the signed event and a PE
 | Blockchain | Solidity, Hardhat, `web3.py` |
 | Testing | pytest, httpx, Hardhat tests |
 
+
 ## Setup
 
 Requirements: Python 3.11 or newer, and Node.js for the web app.
