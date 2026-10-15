@@ -1,5 +1,7 @@
 # TraceTrust: Laptop Anti-Counterfeit Trust Fabric
-
+A miniproject/prototype built specifically under the Problem Statement- "Build a provenance network where products/lots receive identities and every authorized transfer or
+scan becomes a verifiable event. Detect duplicate identities, impossible travel and suspicious
+handovers".
 A provenance prototype that links physical laptops, tamper-evident seals and boxes to a signed, hash-chained, blockchain-anchored record, then flags impossible or inconsistent histories with explainable evidence scores.
 
 > **Scope note:** this is a hackathon prototype. It makes cloning, tampering and bad handovers visible and explainable. It does not prove that a physical laptop is genuine, and the UI never says "genuine".
